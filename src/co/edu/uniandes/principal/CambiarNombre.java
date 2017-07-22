@@ -1,7 +1,7 @@
 package co.edu.uniandes.principal;
 
-import co.edu.uniandes.cargaarchivos.CargaArchivos;
 import co.edu.uniandes.graficador.GraficadorResultados;
+import co.edu.uniandes.manejadores.ManejadorArchivos;
 
 public class CambiarNombre {
 
@@ -27,8 +27,10 @@ public class CambiarNombre {
 
 			if (numeroRepeticiones > 0) {
 				try {
-					CargaArchivos.cargarPoblarArchivoModeloRDF(RUTA_ARCHIVO_MODELO_RDF, numeroRepeticiones, numeroIncremento);
+					ManejadorArchivos.cargarPoblarArchivoModeloRDF(RUTA_ARCHIVO_MODELO_RDF, numeroRepeticiones,
+							numeroIncremento);
 					GraficadorResultados.generarGraficaResultadosModeloRDF(numeroIncremento);
+					ManejadorArchivos.restablecerArchivoModelo(RUTA_ARCHIVO_MODELO_RDF);
 				} catch (Exception e) {
 					mensaje.append(e.getMessage());
 					System.out.println(mensaje);

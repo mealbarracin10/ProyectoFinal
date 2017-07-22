@@ -13,22 +13,29 @@ public class Grafica extends ApplicationFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	public Grafica(String tituloAplicacion, String tituloGrafica, List<Long> datos, int numeroIncremento) {
+	private static final String LABEL_EJE_X = "Carga";
+	private static final String LABEL_EJE_Y = "Tiempo de respuesta (ms)";
+
+	public Grafica(String tituloAplicacion) {
 		super(tituloAplicacion);
-		JFreeChart lineChart = ChartFactory.createLineChart(tituloGrafica, "Carga", "Tiempo de respuesta (ms)",
-				crearConjuntoDatos(datos, numeroIncremento), PlotOrientation.VERTICAL, true, true, false);
+	}
+
+	public void añadirPanelGrafica(String modelo, String tituloGrafica, List<Long> datos, int numeroIncremento,
+			String ubicacion) {
+		JFreeChart lineChart = ChartFactory.createLineChart(tituloGrafica, LABEL_EJE_X, LABEL_EJE_Y,
+				crearConjuntoDatos(modelo, datos, numeroIncremento), PlotOrientation.VERTICAL, true, true, false);
 
 		ChartPanel chartPanel = new ChartPanel(lineChart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(560, 367));
-		setContentPane(chartPanel);
+		this.getContentPane().add(chartPanel, ubicacion);
 	}
 
-	public static DefaultCategoryDataset crearConjuntoDatos(List<Long> datos, int numeroIncremento) {
+	public DefaultCategoryDataset crearConjuntoDatos(String modelo, List<Long> datos, int numeroIncremento) {
 		DefaultCategoryDataset conjuntoDatos = new DefaultCategoryDataset();
 
 		int contador = numeroIncremento;
 		for (Long dato : datos) {
-			conjuntoDatos.addValue(dato, "Tiempo de respuesta", String.valueOf(contador));
+			conjuntoDatos.addValue(dato, modelo, String.valueOf(contador));
 			contador += numeroIncremento;
 		}
 

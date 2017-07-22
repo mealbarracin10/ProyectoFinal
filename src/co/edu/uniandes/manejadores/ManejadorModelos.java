@@ -1,4 +1,4 @@
-package co.edu.uniandes.cargamodelos;
+package co.edu.uniandes.manejadores;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,12 +14,12 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.FileManager;
 
-public class CargaModelos {
+public class ManejadorModelos {
 
 	public static final String LLAVE_TIEMPOS_CARGA_MODELO_RDF = "TiemposCargaModeloRDF";
 	public static final String LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_RDF = "TiemposEjecucionQueryModeloRDF";
 
-	public static HashMap<String, List<Long>> estadisticasModelos = new HashMap<>();
+	private static HashMap<String, List<Long>> estadisticasModelos = new HashMap<>();
 
 	/**
 	 * 
@@ -39,7 +39,7 @@ public class CargaModelos {
 
 			// Lectura del contenido del archivo en el modelo RDF
 			modeloRDF.read(inputStream, null);
-			
+
 			System.out.println("Tamaño del modelo: " + modeloRDF.size());
 
 			//
@@ -94,6 +94,10 @@ public class CargaModelos {
 					"######### Tiempo de ejecución del query sobre el modelo: " + tiempoEjecucionQuery + " ms");
 		}
 
+	}
+
+	public static HashMap<String, List<Long>> getEstadisticasModelos() {
+		return estadisticasModelos;
 	}
 
 }

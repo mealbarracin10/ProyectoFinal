@@ -1,5 +1,8 @@
-package co.edu.uniandes.cargaarchivos;
+package co.edu.uniandes.manejadores;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -11,10 +14,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
-import co.edu.uniandes.cargamodelos.CargaModelos;
+public class ManejadorArchivos {
 
-public class CargaArchivos {
-
+	private static final String TAG_INICIO_ARCHIVO_MODELO_RDF = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+			+ "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
+			+ "xmlns:prop=\"http://www.elfuturoeshoy.mipropia.com#\">\n";
 	private static final String TAG_FIN_ARCHIVO_MODELO_RDF = "</rdf:RDF>";
 
 	private static final String[] DISPONIBILIDAD_PPRODUCTOS = { "True", "False" };
@@ -190,12 +194,13 @@ public class CargaArchivos {
 
 			nuevosProductos.append("\n");
 
-			// Si la cantidad de nuevos elementos del modelo RDF es multiplo de 10 (cantidad
-			// de elementos para genrar estadisticas) se generan las estadisticas del modelo
+			// Si la cantidad de nuevos elementos del modelo RDF es multiplo del número de
+			// incremento (cantidad de elementos para genrar estadisticas) se generan las
+			// estadisticas del modelo
 			if (i > 1 & (i % numeroIncremento == 0)) {
 				generarEstadisticasModeloRDF(rutaArchivoModeloRDF, nuevosProductos.toString());
 
-				// Se limpia la cantidad de elemento anterior
+				// Se limpia la cantidad de elementos anterior
 				nuevosProductos.delete(0, nuevosProductos.length());
 			}
 
@@ -205,14 +210,10 @@ public class CargaArchivos {
 
 	/**
 	 * 
-	 * 
-	 * @return
+	 * @param rutaArchivoModeloRDF
+	 * @param nuevoContenidoModeloRDF
 	 * @throws IOException
 	 */
-	/*
-	 * private static int calcularProximoIdentificadorProductos() { return 0; }
-	 */
-
 	private static void generarEstadisticasModeloRDF(String rutaArchivoModeloRDF, String nuevoContenidoModeloRDF)
 			throws IOException {
 		// Carga del archivo que contiene el modelo RDF desde la ruta especificada
@@ -229,7 +230,21 @@ public class CargaArchivos {
 		}
 
 		// Cargar modelo RDF y calcular tiempos con el nuevo contenido
-		CargaModelos.cargarValidarModeloRDF(rutaArchivoModeloRDF);
+		ManejadorModelos.cargarValidarModeloRDF(rutaArchivoModeloRDF);
+	}
+
+	/**
+	 * 
+	 * @param rutaArchivoModelo
+	 * @throws IOException
+	 */
+	public static void restablecerArchivoModelo(String rutaArchivoModelo) throws IOException {
+		File archivoModelo = new File(rutaArchivoModelo);
+		FileWriter escritorArchivo = new FileWriter(archivoModelo);
+		BufferedWriter bufferEscritura = new BufferedWriter(escritorArchivo);
+		bufferEscritura.write(TAG_INICIO_ARCHIVO_MODELO_RDF);
+		bufferEscritura.write(TAG_FIN_ARCHIVO_MODELO_RDF);
+		bufferEscritura.close();
 	}
 
 }
