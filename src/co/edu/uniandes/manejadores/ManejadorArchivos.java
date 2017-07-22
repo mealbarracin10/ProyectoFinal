@@ -247,4 +247,78 @@ public class ManejadorArchivos {
 		bufferEscritura.close();
 	}
 
+	public static void generarNuevoContenidoModeloOWL(String rutaArchivoModeloOWL) {
+		String primeraParteTagDescription = "<owl:NamedIndividual rdf:about=\"http://www.semanticweb.org/martinalbarracin/ontologies/2017/6/untitled-ontology-15#P00";
+		String segundaParteTagDescription = "\">\n";
+		String finDeclaration = "</Declaration>\n";
+
+		// numeros quemados para pruebas
+		int numeroElementos = 10;
+		int numeroIncremento = 1;
+		int identificadorProducto = 1;
+		int indice = 0;
+		String disponibilidad = null;
+		String categoria = null;
+		String proveedor = null;
+		String color = null;
+		Date fechaCreacion;
+		String fechaCreacionCadena = null;
+		Date fechaModificacion;
+		String fechaModificacionCadena = null;
+		int inventario = 0;
+		int peso = 0;
+		int costo = 0;
+		int precio = 0;
+
+		// Formato de fecha
+		DateFormat formatoFecha = new SimpleDateFormat(FORMATO_FECHA_YYYY_MM_DD_HH_MI_SS);
+
+		// Generación de nuevos productos
+		StringBuffer nuevosIndividuals = new StringBuffer();
+		nuevosIndividuals.append("\n<!-- Individuals Ontology -->\n");
+		for (int i = 0; i < (numeroElementos * numeroIncremento); i++) {
+
+			// Individuals
+			indice = ThreadLocalRandom.current().nextInt(DISPONIBILIDAD_PPRODUCTOS.length);
+			disponibilidad = DISPONIBILIDAD_PPRODUCTOS[indice];
+
+			nuevosIndividuals.append(primeraParteTagDescription).append(identificadorProducto);
+			nuevosIndividuals.append(segundaParteTagDescription).append(finDeclaration);
+		}
+
+		System.out.println("nuevo owl" + nuevosIndividuals);
+
+		// create ontology model
+		// OntModel ontology = ModelFactory.createOntologyModel(
+		// OntModelSpec.OWL_MEM_MICRO_RULE_INF);
+
+		// get url path
+		// InputStream inputStream = FileManager.get().open(rutaArchivoModeloOWL);
+
+		// System.out.println("entro a la clase Manejador"+ rutaArchivoModeloOWL);
+
+		// if (inputStream != null) {
+
+		// Date tiempoinicioLecturaModelo = new Date();
+		// read the ontology
+		// Model ModeloOWL = ontology.read(inputStream, "RDF/XML");
+		// System.out.println("Tamaño del modelo: " + ModeloOWL.size());
+		// Date tiempofinLecturaModelo = new Date();
+		// Long tiempoLecturaModelo = tiempofinLecturaModelo.getTime() -
+		// tiempoinicioLecturaModelo.getTime();
+		// System.out.println("######### Tiempo de carga del modelo: " +
+		// tiempoLecturaModelo + " ms");
+
+		// String queryString = "PREFIX
+		// example:<http://www.flaviopileggi.net/Ontology/Example#>"+ "\n";
+		// queryString += "SELECT ?person" + "\n";
+		// queryString += "WHERE {?person a example:Person}";
+		//// execute query
+		// Query query = QueryFactory.create(queryString);
+		// QueryExecution qe = QueryExecutionFactory.create(query,ontology);
+		// ResultSet results = qe.execSelect();
+		// print results nicely
+		// System.out.println(ResultSetFormatter.asText(results));
+		// }
+	}
 }
