@@ -33,5 +33,33 @@ public class GraficadorResultados {
 		grafica.pack();
 		grafica.setVisible(true);
 	}
+		
+	public static void generarGraficaResultadosModeloOWL(int numeroIncremento) {
+		Iterator<Entry<String, List<Long>>> iterador = ManejadorModelos.getEstadisticasModelos().entrySet().iterator();
+		
+		Grafica grafica = new Grafica("Evaluación de Rendimiento");
+
+		while (iterador.hasNext()) {
+			Map.Entry<String, List<Long>> entrada = (Entry<String, List<Long>>) iterador.next();
+			List<Long> valorEntrada = (List<Long>) entrada.getValue();
+
+			switch (entrada.getKey()) {
+			case ManejadorModelos.LLAVE_TIEMPOS_CARGA_MODELO_OWL:
+				grafica.añadirPanelGrafica("OWL", "Carga de modelo", valorEntrada, numeroIncremento, BorderLayout.WEST);
+				break;
+			case ManejadorModelos.LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL:
+				grafica.añadirPanelGrafica("OWL", "Procesamiento Query", valorEntrada, numeroIncremento, BorderLayout.EAST);
+			default:
+				break;
+			}
+		}
+		grafica.pack();
+		grafica.setVisible(true);
+	}
+	
+	
+	
+	
+	
 
 }

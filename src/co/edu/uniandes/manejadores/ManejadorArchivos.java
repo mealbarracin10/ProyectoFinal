@@ -2,8 +2,11 @@ package co.edu.uniandes.manejadores;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -14,7 +17,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.hp.hpl.jena.util.FileManager;
+
 public class ManejadorArchivos {
+	
+	private static final String  rutaArchivoModeloBaseOWL =  "src/recursos/Base.xml";
 
 	private static final String TAG_INICIO_ARCHIVO_MODELO_RDF = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
 			+ "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
@@ -247,78 +254,155 @@ public class ManejadorArchivos {
 		bufferEscritura.close();
 	}
 
-	public static void generarNuevoContenidoModeloOWL(String rutaArchivoModeloOWL) {
-		String primeraParteTagDescription = "<owl:NamedIndividual rdf:about=\"http://www.semanticweb.org/martinalbarracin/ontologies/2017/6/untitled-ontology-15#P00";
-		String segundaParteTagDescription = "\">\n";
-		String finDeclaration = "</Declaration>\n";
-
-		// numeros quemados para pruebas
-		int numeroElementos = 10;
-		int numeroIncremento = 1;
-		int identificadorProducto = 1;
+	public static void generarNuevoContenidoModeloOWL(String rutaArchivoModeloOWL, int numeroElementos, int numeroIncremento) throws IOException {
 		int indice = 0;
-		String disponibilidad = null;
-		String categoria = null;
-		String proveedor = null;
-		String color = null;
+		int costo = 0;
+		int peso = 0;
+		int inventario = 0;
+		int precio = 0;	
 		Date fechaCreacion;
 		String fechaCreacionCadena = null;
 		Date fechaModificacion;
 		String fechaModificacionCadena = null;
-		int inventario = 0;
-		int peso = 0;
-		int costo = 0;
-		int precio = 0;
-
+		String disponibilidad = null;
+		String primeraParteTagDescription = "\"http://elfuturoeshoy.mipropia.com#";
+		String dataType = "http://www.w3.org/2001/XMLSchema#";
+		String segundaParteTagDescription = "\">\n";
+		String cierreTagMismaLinea = "\"/>\n";
+		String tagRDF = "rdf:";
+		String tagNamedIndividual = "owl:NamedIndividual";
+		String inicioTag = "<";
+		String cierreTagSaltoLinea  = ">\n";
+		String cierreTagComillas = "\">";
+		String cierreTag = ">";
+		String finCierreTag = "</";
+		String espacioSimple =" ";
+		String cadenadataTye = "datatype=\"";
+		String categoria = null;
+		String color = null;
+		String proveedor = null;
+		// numeros quemados para pruebas
+		int identificadorProducto = 1;
 		// Formato de fecha
 		DateFormat formatoFecha = new SimpleDateFormat(FORMATO_FECHA_YYYY_MM_DD_HH_MI_SS);
-
 		// Generación de nuevos productos
 		StringBuffer nuevosIndividuals = new StringBuffer();
 		nuevosIndividuals.append("\n<!-- Individuals Ontology -->\n");
 		for (int i = 0; i < (numeroElementos * numeroIncremento); i++) {
-
 			// Individuals
+			
+			//tag NamedIndividual
+			nuevosIndividuals.append(inicioTag).append(tagNamedIndividual).append(espacioSimple).append(tagRDF).append("about=").append(primeraParteTagDescription).append("P00").append(identificadorProducto).append(segundaParteTagDescription);				
+			//tag type
+			//nuevosIndividuals.append(inicioTag).append(tagRDF).append("type").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append("product").append(cierreTagMismaLinea);
+			
+			//tag Categoria
+			indice = ThreadLocalRandom.current().nextInt(CATEGORIAS_PRODUCTOS.length);
+			categoria = CATEGORIAS_PRODUCTOS[indice];
+			nuevosIndividuals.append(inicioTag).append("hasCategory").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append(categoria).append(cierreTagMismaLinea);
+			
+			//tag Color
+			indice = ThreadLocalRandom.current().nextInt(COLORES_PRODUCTOS.length);
+			color = COLORES_PRODUCTOS[indice];
+			nuevosIndividuals.append(inicioTag).append("hasColor").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append(color).append(cierreTagMismaLinea);
+			
+			//tag proveedor		
+			indice = ThreadLocalRandom.current().nextInt(PROVEEDORES_PRODUCTOS.length);
+			proveedor = PROVEEDORES_PRODUCTOS[indice];	
+			nuevosIndividuals.append(inicioTag).append("hasColor").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append(proveedor).append(cierreTagMismaLinea);
+			
+			//tag unidad de medida	
+			nuevosIndividuals.append(inicioTag).append("hasColor").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append("Grams").append(cierreTagMismaLinea);
+			
+			
+			//tag disponibilidad
 			indice = ThreadLocalRandom.current().nextInt(DISPONIBILIDAD_PPRODUCTOS.length);
 			disponibilidad = DISPONIBILIDAD_PPRODUCTOS[indice];
+			nuevosIndividuals.append(inicioTag).append("isAvailable").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append(disponibilidad).append(cierreTagMismaLinea);
+			
+			
+			// tag hasCost	
+			costo = ThreadLocalRandom.current().nextInt(100000000);
+			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasCost").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
+			.append(costo).append(finCierreTag).append(tagRDF).append("hasCost").append(cierreTagSaltoLinea);
+			
+			// Fecha creación registro producto
+			fechaCreacion = new Date();
+			fechaCreacionCadena = formatoFecha.format(fechaCreacion);
+			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasDateCreated").append(cierreTag).append(fechaCreacionCadena).append(finCierreTag).append(tagRDF).append("hasDateCreated").append(cierreTagSaltoLinea);
+			
+			//Fecha de Modificacion registro producto
+			fechaModificacion = new Date();
+			fechaModificacionCadena = formatoFecha.format(fechaModificacion);
+			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasDateModified").append(cierreTag).append(fechaModificacionCadena).append(finCierreTag).append(tagRDF).append("hasDateModified").append(cierreTagSaltoLinea);
+			
+			//Descripcion de Producto
+			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasDescription").append(cierreTag).append("Description_").append(identificadorProducto).append(finCierreTag).append(tagRDF).append("hasDescription").append(cierreTagSaltoLinea);
+			
+			//inventario	
+			inventario = ThreadLocalRandom.current().nextInt(10000);
+			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasInventory").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
+			.append(inventario).append(finCierreTag).append(tagRDF).append("hasInventory").append(cierreTagSaltoLinea);
+			
+			// nombre
+			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasName").append(cierreTag).append("Name_").append(identificadorProducto).append(finCierreTag).append(tagRDF).append("hasName").append(cierreTagSaltoLinea);
+			
+			//precio
+			precio = ThreadLocalRandom.current().nextInt((costo + 100), 1000000000);
+			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasPrice").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
+			.append(inventario).append(finCierreTag).append(tagRDF).append("hasPrice").append(cierreTagSaltoLinea);
+			
+			//Weight
+			peso = ThreadLocalRandom.current().nextInt(100000000);
+			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasWeight").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("decimal").append(cierreTagComillas)
+			.append(peso).append(finCierreTag).append(tagRDF).append("hasWeight").append(cierreTagSaltoLinea);
+			
+			//fin cierre NamedIndividual
+			nuevosIndividuals.append(finCierreTag).append(tagNamedIndividual).append(cierreTagSaltoLinea);		
+			identificadorProducto++;
 
-			nuevosIndividuals.append(primeraParteTagDescription).append(identificadorProducto);
-			nuevosIndividuals.append(segundaParteTagDescription).append(finDeclaration);
+		// Si la cantidad de nuevos elementos del modelo RDF es multiplo del número de
+		// incremento (cantidad de elementos para genrar estadisticas) se generan las
+		// estadisticas del modelo
+		if (i > 1 & (i % numeroIncremento == 0)) 
+			{
+			generarEstadisticasModeloOWL(rutaArchivoModeloOWL, nuevosIndividuals.toString());
+			// Se limpia la cantidad de elementos anterior
+			nuevosIndividuals.delete(0, nuevosIndividuals.length());
+			}
+		identificadorProducto++;
 		}
-
-		System.out.println("nuevo owl" + nuevosIndividuals);
-
-		// create ontology model
-		// OntModel ontology = ModelFactory.createOntologyModel(
-		// OntModelSpec.OWL_MEM_MICRO_RULE_INF);
-
-		// get url path
-		// InputStream inputStream = FileManager.get().open(rutaArchivoModeloOWL);
-
-		// System.out.println("entro a la clase Manejador"+ rutaArchivoModeloOWL);
-
-		// if (inputStream != null) {
-
-		// Date tiempoinicioLecturaModelo = new Date();
-		// read the ontology
-		// Model ModeloOWL = ontology.read(inputStream, "RDF/XML");
-		// System.out.println("Tamaño del modelo: " + ModeloOWL.size());
-		// Date tiempofinLecturaModelo = new Date();
-		// Long tiempoLecturaModelo = tiempofinLecturaModelo.getTime() -
-		// tiempoinicioLecturaModelo.getTime();
-		// System.out.println("######### Tiempo de carga del modelo: " +
-		// tiempoLecturaModelo + " ms");
-
-		// String queryString = "PREFIX
-		// example:<http://www.flaviopileggi.net/Ontology/Example#>"+ "\n";
-		// queryString += "SELECT ?person" + "\n";
-		// queryString += "WHERE {?person a example:Person}";
-		//// execute query
-		// Query query = QueryFactory.create(queryString);
-		// QueryExecution qe = QueryExecutionFactory.create(query,ontology);
-		// ResultSet results = qe.execSelect();
-		// print results nicely
-		// System.out.println(ResultSetFormatter.asText(results));
-		// }
 	}
+
+	private static void generarEstadisticasModeloOWL(String rutaArchivoModeloRDF, String nuevoContenidoModeloRDF)
+			throws IOException {
+		// Carga del archivo que contiene el modelo RDF desde la ruta especificada
+		Path ruta = Paths.get(rutaArchivoModeloRDF);
+		Charset codificacionCaracteres = StandardCharsets.UTF_8;
+
+		// Adición de nuevos productos al modelo RDF y sobreescritura del archivo que lo
+		// contiene
+		if (ruta != null) {
+			String contenido = new String(Files.readAllBytes(ruta), codificacionCaracteres);
+			contenido = contenido.replace(TAG_FIN_ARCHIVO_MODELO_RDF,
+					nuevoContenidoModeloRDF + TAG_FIN_ARCHIVO_MODELO_RDF);
+			Files.write(ruta, contenido.getBytes(codificacionCaracteres));
+		}
+		// Cargar modelo RDF y calcular tiempos con el nuevo contenido
+		ManejadorModelos.cargarValidarModeloOWL(rutaArchivoModeloRDF);
+	}
+
+	public static void restablecerArchivoModeloOWL(String rutaArchivoModeloOwl) throws IOException {
+		
+		InputStream inputStreamBase = FileManager.get().open(rutaArchivoModeloBaseOWL);	
+		OutputStream archivoModelo = new FileOutputStream(rutaArchivoModeloOwl);		
+		int c;
+	    while ((c = inputStreamBase.read()) != -1) {
+	      System.out.print((char) c);
+	      archivoModelo.write(c);
+	    }
+	    inputStreamBase.close();
+	    archivoModelo.close();		
+	}
+
 }
