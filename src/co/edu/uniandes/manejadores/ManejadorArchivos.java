@@ -282,17 +282,17 @@ public class ManejadorArchivos {
 		String color = null;
 		String proveedor = null;
 		// numeros quemados para pruebas
-		int identificadorProducto = 1;
 		// Formato de fecha
 		DateFormat formatoFecha = new SimpleDateFormat(FORMATO_FECHA_YYYY_MM_DD_HH_MI_SS);
 		// Generación de nuevos productos
 		StringBuffer nuevosIndividuals = new StringBuffer();
+		System.out.println("individuos a crear" + numeroElementos * numeroIncremento);
 		nuevosIndividuals.append("\n<!-- Individuals Ontology -->\n");
 		for (int i = 0; i < (numeroElementos * numeroIncremento); i++) {
 			// Individuals
 			
 			//tag NamedIndividual
-			nuevosIndividuals.append(inicioTag).append(tagNamedIndividual).append(espacioSimple).append(tagRDF).append("about=").append(primeraParteTagDescription).append("P00").append(identificadorProducto).append(segundaParteTagDescription);				
+			nuevosIndividuals.append(inicioTag).append(tagNamedIndividual).append(espacioSimple).append(tagRDF).append("about=").append(primeraParteTagDescription).append("P00").append(i).append(segundaParteTagDescription);				
 			//tag type
 			//nuevosIndividuals.append(inicioTag).append(tagRDF).append("type").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append("product").append(cierreTagMismaLinea);
 			
@@ -337,7 +337,7 @@ public class ManejadorArchivos {
 			nuevosIndividuals.append(inicioTag).append("hasDateModified").append(cierreTag).append(fechaModificacionCadena).append(finCierreTag).append("hasDateModified").append(cierreTagSaltoLinea);
 			
 			//Descripcion de Producto
-			nuevosIndividuals.append(inicioTag).append("hasDescription").append(cierreTag).append("Description_").append(identificadorProducto).append(finCierreTag).append("hasDescription").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasDescription").append(cierreTag).append("Description_").append(i).append(finCierreTag).append("hasDescription").append(cierreTagSaltoLinea);
 			
 			//inventario	
 			inventario = ThreadLocalRandom.current().nextInt(10000);
@@ -345,12 +345,12 @@ public class ManejadorArchivos {
 			.append(inventario).append(finCierreTag).append("hasInventory").append(cierreTagSaltoLinea);
 			
 			// nombre
-			nuevosIndividuals.append(inicioTag).append("hasName").append(cierreTag).append("Name_").append(identificadorProducto).append(finCierreTag).append("hasName").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasName").append(cierreTag).append("Name_").append(i).append(finCierreTag).append("hasName").append(cierreTagSaltoLinea);
 			
 			//precio
 			precio = ThreadLocalRandom.current().nextInt((costo + 100), 1000000000);
 			nuevosIndividuals.append(inicioTag).append("hasPrice").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
-			.append(inventario).append(finCierreTag).append("hasPrice").append(cierreTagSaltoLinea);
+			.append(precio).append(finCierreTag).append("hasPrice").append(cierreTagSaltoLinea);
 			
 			//Weight
 			peso = ThreadLocalRandom.current().nextInt(100000000);
@@ -359,18 +359,18 @@ public class ManejadorArchivos {
 			
 			//fin cierre NamedIndividual
 			nuevosIndividuals.append(finCierreTag).append(tagNamedIndividual).append(cierreTagSaltoLinea);		
-			identificadorProducto++;
 
 		// Si la cantidad de nuevos elementos del modelo RDF es multiplo del número de
 		// incremento (cantidad de elementos para genrar estadisticas) se generan las
 		// estadisticas del modelo
+			System.out.println("individuo numero: " + i);
 		if (i > 1 & (i % numeroIncremento == 0)) 
 			{
+			System.out.println("individuo numero escribir: " + i);
 			generarEstadisticasModeloOWL(rutaArchivoModeloOWL, nuevosIndividuals.toString());
 			// Se limpia la cantidad de elementos anterior
 			nuevosIndividuals.delete(0, nuevosIndividuals.length());
 			}
-		identificadorProducto++;
 		}
 	}
 

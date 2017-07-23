@@ -140,7 +140,7 @@ public class ManejadorModelos {
 		
 		// collect results
 		ResultSet algo = qe.execSelect();
-		System.out.println( ResultSetFormatter.asText( algo ) );
+		//System.out.println( ResultSetFormatter.asText( algo ) );
 		Date finEjecucionQuery = new Date();
 		Long tiempoEjecucionQuery = finEjecucionQuery.getTime() - inicioEjecucionQuery.getTime();
 		if (estadisticasModelos.containsKey(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL)

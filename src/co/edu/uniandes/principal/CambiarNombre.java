@@ -7,6 +7,7 @@ public class CambiarNombre {
 
 	// Ruta del archivo que contiene el modelo RDF
 	private static final String RUTA_ARCHIVO_MODELO_RDF = "src/recursos/productos_modelo_RDF.xml";
+	private static final String RUTA_ARCHIVO_MODELO_OWL = "src/recursos/productos_modelo_OWL.owl";
 
 	// Constantes de mensajes de error
 	private static final String ERROR = "********** ERROR ************\n";
@@ -31,6 +32,11 @@ public class CambiarNombre {
 							numeroIncremento);
 					GraficadorResultados.generarGraficaResultadosModeloRDF(numeroIncremento);
 					ManejadorArchivos.restablecerArchivoModelo(RUTA_ARCHIVO_MODELO_RDF);
+					
+					ManejadorArchivos.generarNuevoContenidoModeloOWL(RUTA_ARCHIVO_MODELO_OWL, numeroRepeticiones, numeroIncremento);
+					GraficadorResultados.generarGraficaResultadosModeloOWL(numeroIncremento);
+					ManejadorArchivos.restablecerArchivoModeloOWL(RUTA_ARCHIVO_MODELO_OWL);
+					
 				} catch (Exception e) {
 					mensaje.append(e.getMessage());
 					System.out.println(mensaje);
