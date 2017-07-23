@@ -12,8 +12,6 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.FileManager;
@@ -26,7 +24,6 @@ public class ManejadorModelos {
 	public static final String LLAVE_TIEMPOS_CARGA_MODELO_OWL = "TiemposCargaModeloOWL";
 	public static final String LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL = "TiemposEjecucionQueryModeloOWL";
 
-	
 	private static HashMap<String, List<Long>> estadisticasModelos = new HashMap<>();
 
 	/**
@@ -42,16 +39,16 @@ public class ManejadorModelos {
 		InputStream inputStream = FileManager.get().open(rutaArchivoModeloRDF);
 
 		if (inputStream != null) {
-			//
+			// Toma de tiempo de inicio de lectura del modelo
 			Date inicioLecturaModelo = new Date();
 
 			// Lectura del contenido del archivo en el modelo RDF
 			modeloRDF.read(inputStream, null);
 
-			//
+			// Toma de tiempo de fin de lectura del modelo
 			Date finLecturaModelo = new Date();
 
-			//
+			// Calculo del tiempo total de carga del modelo
 			Long tiempoLecturaModelo = finLecturaModelo.getTime() - inicioLecturaModelo.getTime();
 
 			if (estadisticasModelos.containsKey(LLAVE_TIEMPOS_CARGA_MODELO_RDF)
@@ -63,27 +60,28 @@ public class ManejadorModelos {
 				estadisticasModelos.put(LLAVE_TIEMPOS_CARGA_MODELO_RDF, tiemposCargaModeloRDF);
 
 			}
-
+			
 			System.out.println("######### Tiempo de carga del modelo: " + tiempoLecturaModelo + " ms");
 
-			// create query string
-			String queryString = "SELECT ?x ?p ?y " + "\n";
-			queryString += "WHERE {?x ?p ?y}";
+			// Crea la cadena del query
+			String queryString = "PREFIX prop:<http://elfuturoeshoy.mimodelordf.com#>" + "\n";
+			queryString += "SELECT ?producto" + "\n";
+			queryString += "WHERE {?producto prop:hasColor prop:Blue}";
 
-			//
+			// Toma de tiempo de inicio de generación y ejecución del query
 			Date inicioEjecucionQuery = new Date();
 
-			// create ARQ query
+			// Crea el ARQ query
 			Query query = QueryFactory.create(queryString);
-			// execute query
+			// Ejecuta el query
 			QueryExecution qe = QueryExecutionFactory.create(query, modeloRDF);
-			// collect results
+			// Obtiene los resultados
 			qe.execSelect();
 
-			//
+			// Toma de tiempo de fin de generación y ejecución del query
 			Date finEjecucionQuery = new Date();
 
-			//
+			// Calculo del tiempo total de ejecución del query
 			Long tiempoEjecucionQuery = finEjecucionQuery.getTime() - inicioEjecucionQuery.getTime();
 
 			if (estadisticasModelos.containsKey(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_RDF)
@@ -94,65 +92,78 @@ public class ManejadorModelos {
 				tiemposEjecucionQueryModeloRDF.add(tiempoLecturaModelo);
 				estadisticasModelos.put(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_RDF, tiemposEjecucionQueryModeloRDF);
 			}
+			
 			System.out.println(
 					"######### Tiempo de ejecución del query sobre el modelo: " + tiempoEjecucionQuery + " ms");
 		}
 
 	}
 
-	public static HashMap<String, List<Long>> getEstadisticasModelos() {
-		return estadisticasModelos;
-	}
-
-	public static void cargarValidarModeloOWL(String rutaArchivoModeloOWL) {	
+	/**
+	 * 
+	 * @param rutaArchivoModeloOWL
+	 */
+	public static void cargarValidarModeloOWL(String rutaArchivoModeloOWL) {
 		// create ontology model
 		OntModel ontology = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_MICRO_RULE_INF);
 		// get url path
 		InputStream inputStream = FileManager.get().open(rutaArchivoModeloOWL);
 		if (inputStream != null) {
-		Date tiempoinicioLecturaModelo = new Date();
-		// read the ontology
-		Model ModeloOWL = ontology.read(inputStream, "RDF/XML");
-		Date tiempofinLecturaModelo = new Date();
-		Long tiempoLecturaModelo = tiempofinLecturaModelo.getTime() -tiempoinicioLecturaModelo.getTime();
-				
-		if (estadisticasModelos.containsKey(LLAVE_TIEMPOS_CARGA_MODELO_OWL)
-				& estadisticasModelos.get(LLAVE_TIEMPOS_CARGA_MODELO_OWL) != null) {
-			estadisticasModelos.get(LLAVE_TIEMPOS_CARGA_MODELO_OWL).add(tiempoLecturaModelo);
-		} else {
-			List<Long> tiemposCargaModeloOWL = new ArrayList<Long>();
-			tiemposCargaModeloOWL.add(tiempoLecturaModelo);
-			estadisticasModelos.put(LLAVE_TIEMPOS_CARGA_MODELO_OWL, tiemposCargaModeloOWL);
-		}		
-		System.out.println("######### Tiempo de carga del modelo: " + tiempoLecturaModelo + " ms");
-		// create query string
-		String queryString = "SELECT ?x ?p ?y " + "\n";
-		queryString += "WHERE {?x ?p ?y}";
-		Date inicioEjecucionQuery = new Date();
-		
-		// create ARQ query
-		Query query = QueryFactory.create(queryString);
-		
-		// execute query
-		QueryExecution qe = QueryExecutionFactory.create(query, ModeloOWL);
-		
-		
-		
-		// collect results
-		ResultSet algo = qe.execSelect();
-		//System.out.println( ResultSetFormatter.asText( algo ) );
-		Date finEjecucionQuery = new Date();
-		Long tiempoEjecucionQuery = finEjecucionQuery.getTime() - inicioEjecucionQuery.getTime();
-		if (estadisticasModelos.containsKey(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL)
-			& estadisticasModelos.get(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL) != null) {
-			estadisticasModelos.get(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL).add(tiempoEjecucionQuery);
-		} else {
-			List<Long> tiemposEjecucionQueryModeloOWL = new ArrayList<Long>();
-			tiemposEjecucionQueryModeloOWL.add(tiempoLecturaModelo);
-			estadisticasModelos.put(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL, tiemposEjecucionQueryModeloOWL);
-			  }		
-		System.out.println(
-				"######### Tiempo de ejecución del query sobre el modelo: " + tiempoEjecucionQuery + " ms");
-		}	
+			Date tiempoinicioLecturaModelo = new Date();
+			// read the ontology
+			Model ModeloOWL = ontology.read(inputStream, "RDF/XML");
+			Date tiempofinLecturaModelo = new Date();
+			Long tiempoLecturaModelo = tiempofinLecturaModelo.getTime() - tiempoinicioLecturaModelo.getTime();
+
+			if (estadisticasModelos.containsKey(LLAVE_TIEMPOS_CARGA_MODELO_OWL)
+					& estadisticasModelos.get(LLAVE_TIEMPOS_CARGA_MODELO_OWL) != null) {
+				estadisticasModelos.get(LLAVE_TIEMPOS_CARGA_MODELO_OWL).add(tiempoLecturaModelo);
+			} else {
+				List<Long> tiemposCargaModeloOWL = new ArrayList<Long>();
+				tiemposCargaModeloOWL.add(tiempoLecturaModelo);
+				estadisticasModelos.put(LLAVE_TIEMPOS_CARGA_MODELO_OWL, tiemposCargaModeloOWL);
+			}
+			
+			System.out.println("######### Tiempo de carga del modelo: " + tiempoLecturaModelo + " ms");
+			// create query string
+			/*String queryString = "SELECT ?x ?p ?y " + "\n";
+			queryString += "WHERE {?x ?p ?y}";*/
+			String queryString = "PREFIX prop:<http://elfuturoeshoy.mipropia.com#>" + "\n";
+			queryString += "SELECT ?listaProductos" + "\n";
+			queryString += "WHERE {?listaProductos prop:hasProvider prop:Adidas}";
+			
+			Date inicioEjecucionQuery = new Date();
+
+			// create ARQ query
+			Query query = QueryFactory.create(queryString);
+
+			// execute query
+			QueryExecution qe = QueryExecutionFactory.create(query, ModeloOWL);
+
+			// collect results
+			qe.execSelect();
+
+			Date finEjecucionQuery = new Date();
+			Long tiempoEjecucionQuery = finEjecucionQuery.getTime() - inicioEjecucionQuery.getTime();
+			if (estadisticasModelos.containsKey(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL)
+					& estadisticasModelos.get(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL) != null) {
+				estadisticasModelos.get(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL).add(tiempoEjecucionQuery);
+			} else {
+				List<Long> tiemposEjecucionQueryModeloOWL = new ArrayList<Long>();
+				tiemposEjecucionQueryModeloOWL.add(tiempoLecturaModelo);
+				estadisticasModelos.put(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL, tiemposEjecucionQueryModeloOWL);
+			}
+			System.out.println(
+					"######### Tiempo de ejecución del query sobre el modelo: " + tiempoEjecucionQuery + " ms");
+		}
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public static HashMap<String, List<Long>> getEstadisticasModelos() {
+		return estadisticasModelos;
+	}
+
 }
