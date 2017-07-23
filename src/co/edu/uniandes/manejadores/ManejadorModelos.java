@@ -12,6 +12,8 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.FileManager;
@@ -134,8 +136,11 @@ public class ManejadorModelos {
 		// execute query
 		QueryExecution qe = QueryExecutionFactory.create(query, ModeloOWL);
 		
+		
+		
 		// collect results
-		qe.execSelect();
+		ResultSet algo = qe.execSelect();
+		System.out.println( ResultSetFormatter.asText( algo ) );
 		Date finEjecucionQuery = new Date();
 		Long tiempoEjecucionQuery = finEjecucionQuery.getTime() - inicioEjecucionQuery.getTime();
 		if (estadisticasModelos.containsKey(LLAVE_TIEMPOS_EJECUCION_QUERY_MODELO_OWL)

@@ -309,10 +309,10 @@ public class ManejadorArchivos {
 			//tag proveedor		
 			indice = ThreadLocalRandom.current().nextInt(PROVEEDORES_PRODUCTOS.length);
 			proveedor = PROVEEDORES_PRODUCTOS[indice];	
-			nuevosIndividuals.append(inicioTag).append("hasColor").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append(proveedor).append(cierreTagMismaLinea);
+			nuevosIndividuals.append(inicioTag).append("hasProvider").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append(proveedor).append(cierreTagMismaLinea);
 			
 			//tag unidad de medida	
-			nuevosIndividuals.append(inicioTag).append("hasColor").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append("Grams").append(cierreTagMismaLinea);
+			nuevosIndividuals.append(inicioTag).append("hasUnitMeasure").append(espacioSimple).append(tagRDF).append("resource=").append(primeraParteTagDescription).append("Grams").append(cierreTagMismaLinea);
 			
 			
 			//tag disponibilidad
@@ -323,39 +323,39 @@ public class ManejadorArchivos {
 			
 			// tag hasCost	
 			costo = ThreadLocalRandom.current().nextInt(100000000);
-			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasCost").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
-			.append(costo).append(finCierreTag).append(tagRDF).append("hasCost").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasCost").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
+			.append(costo).append(finCierreTag).append("hasCost").append(cierreTagSaltoLinea);
 			
 			// Fecha creación registro producto
 			fechaCreacion = new Date();
 			fechaCreacionCadena = formatoFecha.format(fechaCreacion);
-			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasDateCreated").append(cierreTag).append(fechaCreacionCadena).append(finCierreTag).append(tagRDF).append("hasDateCreated").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasDateCreated").append(cierreTag).append(fechaCreacionCadena).append(finCierreTag).append("hasDateCreated").append(cierreTagSaltoLinea);
 			
 			//Fecha de Modificacion registro producto
 			fechaModificacion = new Date();
 			fechaModificacionCadena = formatoFecha.format(fechaModificacion);
-			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasDateModified").append(cierreTag).append(fechaModificacionCadena).append(finCierreTag).append(tagRDF).append("hasDateModified").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasDateModified").append(cierreTag).append(fechaModificacionCadena).append(finCierreTag).append("hasDateModified").append(cierreTagSaltoLinea);
 			
 			//Descripcion de Producto
-			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasDescription").append(cierreTag).append("Description_").append(identificadorProducto).append(finCierreTag).append(tagRDF).append("hasDescription").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasDescription").append(cierreTag).append("Description_").append(identificadorProducto).append(finCierreTag).append("hasDescription").append(cierreTagSaltoLinea);
 			
 			//inventario	
 			inventario = ThreadLocalRandom.current().nextInt(10000);
-			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasInventory").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
-			.append(inventario).append(finCierreTag).append(tagRDF).append("hasInventory").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasInventory").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
+			.append(inventario).append(finCierreTag).append("hasInventory").append(cierreTagSaltoLinea);
 			
 			// nombre
-			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasName").append(cierreTag).append("Name_").append(identificadorProducto).append(finCierreTag).append(tagRDF).append("hasName").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasName").append(cierreTag).append("Name_").append(identificadorProducto).append(finCierreTag).append("hasName").append(cierreTagSaltoLinea);
 			
 			//precio
 			precio = ThreadLocalRandom.current().nextInt((costo + 100), 1000000000);
-			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasPrice").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
-			.append(inventario).append(finCierreTag).append(tagRDF).append("hasPrice").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasPrice").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("integer").append(cierreTagComillas)
+			.append(inventario).append(finCierreTag).append("hasPrice").append(cierreTagSaltoLinea);
 			
 			//Weight
 			peso = ThreadLocalRandom.current().nextInt(100000000);
-			nuevosIndividuals.append(inicioTag).append(tagRDF).append("hasWeight").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("decimal").append(cierreTagComillas)
-			.append(peso).append(finCierreTag).append(tagRDF).append("hasWeight").append(cierreTagSaltoLinea);
+			nuevosIndividuals.append(inicioTag).append("hasWeight").append(espacioSimple).append(tagRDF).append(cadenadataTye).append(dataType).append("decimal").append(cierreTagComillas)
+			.append(peso).append(finCierreTag).append("hasWeight").append(cierreTagSaltoLinea);
 			
 			//fin cierre NamedIndividual
 			nuevosIndividuals.append(finCierreTag).append(tagNamedIndividual).append(cierreTagSaltoLinea);		
@@ -398,7 +398,6 @@ public class ManejadorArchivos {
 		OutputStream archivoModelo = new FileOutputStream(rutaArchivoModeloOwl);		
 		int c;
 	    while ((c = inputStreamBase.read()) != -1) {
-	      System.out.print((char) c);
 	      archivoModelo.write(c);
 	    }
 	    inputStreamBase.close();
