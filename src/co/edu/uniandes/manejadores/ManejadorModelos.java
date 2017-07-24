@@ -66,7 +66,10 @@ public class ManejadorModelos {
 			// Crea la cadena del query
 			String queryString = "PREFIX prop:<http://elfuturoeshoy.mimodelordf.com#>" + "\n";
 			queryString += "SELECT ?producto" + "\n";
-			queryString += "WHERE {?producto prop:hasColor prop:Blue}";
+			queryString += "WHERE {?producto prop:hasCategory prop:Clothes ." +"\n";
+			queryString += "       ?producto prop:hasProvider prop:Adidas ." + "\n";
+			queryString += "       OPTIONAL{?producto prop:hasColor prop:Blue}" + "\n";
+			queryString += "}";
 
 			// Toma de tiempo de inicio de generación y ejecución del query
 			Date inicioEjecucionQuery = new Date();
@@ -129,8 +132,11 @@ public class ManejadorModelos {
 			/*String queryString = "SELECT ?x ?p ?y " + "\n";
 			queryString += "WHERE {?x ?p ?y}";*/
 			String queryString = "PREFIX prop:<http://elfuturoeshoy.mipropia.com#>" + "\n";
-			queryString += "SELECT ?listaProductos" + "\n";
-			queryString += "WHERE {?listaProductos prop:hasProvider prop:Adidas}";
+			queryString += "SELECT ?producto" + "\n";
+			queryString += "WHERE {?producto prop:hasCategory prop:Clothes ." + "\n";
+			queryString += "       ?producto prop:hasProvider prop:Adidas ." + "\n";
+			queryString += "       OPTIONAL{?producto prop:hasColor prop:Blue}" + "\n";
+			queryString += "}";
 			
 			Date inicioEjecucionQuery = new Date();
 
