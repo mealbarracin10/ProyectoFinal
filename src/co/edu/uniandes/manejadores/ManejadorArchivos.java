@@ -25,8 +25,8 @@ public class ManejadorArchivos {
 			+ "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
 			+ "xmlns:prop=\"http://elfuturoeshoy.mimodelordf.com#\">\n";
 	private static final String TAG_FIN_ARCHIVO_MODELO_RDF = "</rdf:RDF>";
-	
-	private static final String RUTA_ARCHIVO_BASE_OWL = "src/recursos/Base.xml";
+
+	private static final String RUTA_ARCHIVO_BASE_OWL = "recursos/Base.xml";
 
 	private static final String[] DISPONIBILIDAD_PPRODUCTOS = { "True", "False" };
 	private static final String[] CATEGORIAS_PRODUCTOS = { "Clothes", "Electronics", "Music", "Home", "Office" };
@@ -83,7 +83,7 @@ public class ManejadorArchivos {
 		// Generación de nuevos productos
 		StringBuffer nuevosProductos = new StringBuffer();
 		nuevosProductos.append("\n<!-- Productos -->\n");
-		
+
 		System.out.println("<<<<<<<<<< Estadisticas modelo RDF >>>>>>>>>>");
 
 		for (int i = 1; i <= (numeroElementos * numeroIncremento); i++) {
@@ -117,7 +117,8 @@ public class ManejadorArchivos {
 
 			// Unidad de medida (Peso) producto
 			nuevosProductos.append(primeraParteTagDescription).append(i).append(segundaParteTagDescription);
-			nuevosProductos.append("<prop:hasUnitMeasure rdf:resource=\"http://elfuturoeshoy.mimodelordf.com#Grams\"/>\n");
+			nuevosProductos
+					.append("<prop:hasUnitMeasure rdf:resource=\"http://elfuturoeshoy.mimodelordf.com#Grams\"/>\n");
 			nuevosProductos.append(terceraParteTagDescription);
 
 			// Color producto
@@ -133,8 +134,7 @@ public class ManejadorArchivos {
 			fechaCreacion = new Date();
 			fechaCreacionCadena = formatoFecha.format(fechaCreacion);
 
-			nuevosProductos.append(primeraParteTagDescription).append(i)
-					.append(segundaParteTagDescription);
+			nuevosProductos.append(primeraParteTagDescription).append(i).append(segundaParteTagDescription);
 			nuevosProductos.append("<prop:hasDateCreated>").append(fechaCreacionCadena)
 					.append("</prop:hasDateCreated>\n");
 			nuevosProductos.append(terceraParteTagDescription);
@@ -279,12 +279,12 @@ public class ManejadorArchivos {
 
 		// Formato de fecha
 		DateFormat formatoFecha = new SimpleDateFormat(FORMATO_FECHA_YYYY_MM_DD_HH_MI_SS);
-		
+
 		// Generación de nuevos productos
 		StringBuffer nuevosIndividuals = new StringBuffer();
-		
+
 		System.out.println("<<<<<<<<<< Estadisticas Ontología >>>>>>>>>>");
-		
+
 		nuevosIndividuals.append("\n<!-- Individuals Ontology -->\n");
 		for (int i = 1; i <= (numeroElementos * numeroIncremento); i++) {
 			// Individuals
@@ -388,7 +388,7 @@ public class ManejadorArchivos {
 
 	/**
 	 * 
-	 *  
+	 * 
 	 * @param rutaArchivoModeloRDF
 	 * @param nuevoContenidoModeloRDF
 	 * @throws IOException

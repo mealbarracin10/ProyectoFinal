@@ -6,10 +6,10 @@ import co.edu.uniandes.manejadores.ManejadorArchivos;
 public class EvaluadorRendimiento {
 
 	// Ruta del archivo que contiene el modelo RDF
-	private static final String RUTA_ARCHIVO_MODELO_RDF = "src/recursos/productos_modelo_RDF.xml";
+	private static final String RUTA_ARCHIVO_MODELO_RDF = "recursos/productos_modelo_RDF.xml";
 
 	// Ruta del archivo que contiene el modelo OWL
-	private static final String RUTA_ARCHIVO_MODELO_OWL = "src/recursos/productos_modelo_OWL.owl";
+	private static final String RUTA_ARCHIVO_MODELO_OWL = "recursos/productos_modelo_OWL.owl";
 
 	// Constantes de mensajes de error
 	private static final String ERROR = "********** ERROR ************\n";
@@ -48,8 +48,8 @@ public class EvaluadorRendimiento {
 					ManejadorArchivos.restablecerArchivoModeloOWL(RUTA_ARCHIVO_MODELO_OWL);
 
 				} catch (Exception e) {
-					mensaje.append(e.getMessage());
 					System.out.println(mensaje);
+					e.printStackTrace();
 				}
 			} else {
 				mensaje.append(ERROR_NUMERO_REPETICIONES);
